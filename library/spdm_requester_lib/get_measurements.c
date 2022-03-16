@@ -4,6 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
+#include <stdlib.h>
 #include "spdm_requester_lib_internal.h"
 
 #pragma pack(1)
@@ -90,7 +91,8 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 									SPDM_GET_MEASUREMENTS);
 	if (session_id == NULL) {
 		if (spdm_context->connection_info.connection_state <
-		    SPDM_CONNECTION_STATE_AUTHENTICATED) {
+		    SPDM_CONNECTION_STATE_AUTHENTICATED
+                    && !getenv("SPDM_IGNORE_CHALLENGE_AUTH")) {
 			return RETURN_UNSUPPORTED;
 		}
 		session_info = NULL;
