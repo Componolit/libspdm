@@ -5,6 +5,7 @@
 **/
 
 #include "spdm_common_lib_internal.h"
+#include <stdlib.h>
 
 /**
   This function returns peer certificate chain buffer including spdm_cert_chain_t header.
@@ -1169,6 +1170,13 @@ boolean spdm_verify_measurement_signature(IN spdm_context_t *spdm_context,
 	if (!result) {
 		DEBUG((DEBUG_INFO,
 		       "!!! verify_measurement_signature - FAIL !!!\n"));
+                if (getenv("SPDM_IGNORE_MEASUREMENTS_SIGNATURE")) {
+                    DEBUG((DEBUG_INFO,
+                           "!!! SPDM_IGNORE_MEASUREMENTS_SIGNATURE is set, ignoring !!!\n"));
+                    return TRUE;
+                }
+                DEBUG((DEBUG_INFO,
+                       "!!! SPDM_IGNORE_MEASUREMENTS_SIGNATURE is NOT set !!!\n"));
 		return FALSE;
 	}
 
