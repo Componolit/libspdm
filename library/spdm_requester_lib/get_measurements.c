@@ -93,6 +93,8 @@ return_status try_spdm_get_measurement(IN void *context, IN uint32 *session_id,
 		if (spdm_context->connection_info.connection_state <
 		    SPDM_CONNECTION_STATE_AUTHENTICATED
                     && !getenv("SPDM_IGNORE_CHALLENGE_AUTH")) {
+                        DEBUG((DEBUG_INFO,
+                               "!!! SPDM_IGNORE_CHALLENGE_AUTH is NOT set !!!\n"));
 			return RETURN_UNSUPPORTED;
 		}
 		session_info = NULL;
