@@ -4,6 +4,7 @@
     License: BSD 3-Clause License. For full text see link: https://github.com/DMTF/libspdm/blob/main/LICENSE.md
 **/
 
+#include <stdlib.h>
 #include "spdm_requester_lib_internal.h"
 
 #if SPDM_ENABLE_CAPABILITY_KEY_EX_CAP
@@ -326,7 +327,8 @@ return_status try_spdm_send_receive_key_exchange(
 	}
 	status = spdm_process_opaque_data_version_selection_data(
 		spdm_context, opaque_length, ptr);
-	if (RETURN_ERROR(status)) {
+	if (RETURN_ERROR(status) && !getenv("SPDM_IGNORE_KEY_EX_OPAQUE_DATA")) {
+                DEBUG((DEBUG_INFO, "SPDM_IGNORE_KEY_EX_OPAQUE_DATA is not set\n"));
 		spdm_free_session_id(spdm_context, *session_id);
 		spdm_secured_message_dhe_free(
 			spdm_context->connection_info.algorithm.dhe_named_group,
@@ -371,7 +373,8 @@ return_status try_spdm_send_receive_key_exchange(
 	ptr += signature_size;
 	result = spdm_verify_key_exchange_rsp_signature(
 		spdm_context, session_info, signature, signature_size);
-	if (!result) {
+	if (!result && !getenv("SPDM_IGNORE_KEY_EX_SIGNATURE")) {
+                DEBUG((DEBUG_INFO, "SPDM_IGNORE_KEY_EX_SIGNATURE is not set"));
 		spdm_free_session_id(spdm_context, *session_id);
 		spdm_secured_message_dhe_free(
 			spdm_context->connection_info.algorithm.dhe_named_group,
