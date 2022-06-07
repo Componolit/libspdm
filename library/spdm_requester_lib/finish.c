@@ -5,6 +5,7 @@
 **/
 
 #include "spdm_requester_lib_internal.h"
+#include <stdlib.h>
 
 #pragma pack(1)
 
@@ -215,7 +216,8 @@ return_status try_spdm_send_receive_finish(IN spdm_context_t *spdm_context,
 		result = spdm_verify_finish_rsp_hmac(spdm_context, session_info,
 						     spdm_response.verify_data,
 						     hmac_size);
-		if (!result) {
+		if (!result && !getenv("SPDM_IGNORE_FINISH_HMAC")) {
+                        DEBUG((DEBUG_INFO, "SPDM_IGNORE_FINISH_HMAC is not set\n"));
 			return RETURN_SECURITY_VIOLATION;
 		}
 

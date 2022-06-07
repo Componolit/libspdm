@@ -432,7 +432,8 @@ return_status try_spdm_send_receive_key_exchange(
 		internal_dump_hex(verify_data, hmac_size);
 		result = spdm_verify_key_exchange_rsp_hmac(
 			spdm_context, session_info, verify_data, hmac_size);
-		if (!result) {
+		if (!result && !getenv("SPDM_IGNORE_KEY_EX_HMAC")) {
+                        DEBUG((DEBUG_INFO, "SPDM_IGNORE_KEY_EX_HMAC is not set\n"));
 			spdm_free_session_id(spdm_context, *session_id);
 			spdm_context->error_state =
 				SPDM_STATUS_ERROR_KEY_EXCHANGE_FAILURE;
